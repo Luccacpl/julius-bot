@@ -1,0 +1,119 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Product {
+  id                 String         @id
+  store              String
+  externalId         String
+  sku                String?
+  ean                String?
+  name               String
+  brand              String?
+  category           String?
+  subcategory        String?
+  species            String?
+  flavor             String?
+  price              Float
+  originalPrice      Float?
+  discountPercentage Float?
+  previousPrice      Float?
+  packageSize        String?
+  variation          String?
+  productUrl         String
+  imageUrl           String?
+  availability       String?
+  collectedAt        DateTime
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
+  history            PriceHistory[]
+  memberships        MatchMember[]
+
+  @@unique([store, externalId])
+  @@index([store])
+  @@index([brand])
+  @@index([category])
+  @@index([ean])
+}
+
+model PriceHistory {
+  id                 String   @id @default(cuid())
+  productId          String
+  product            Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  price              Float
+  originalPrice      Float?
+  discountPercentage Float?
+  availability       String?
+  collectedAt        DateTime
+
+  @@index([productId, collectedAt])
+}
+
+model MatchGroup {
+  id            String        @id @default(cuid())
+  canonicalName String
+  brand         String?
+  packageSize   String?
+  species       String?
+  flavor        String?
+  status        String
+  similarity    Float
+  members       MatchMember[]
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
+
+model MatchMember {
+  id         String     @id @default(cuid())
+  groupId    String
+  group      MatchGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  productId  String
+  product    Product    @relation(fields: [productId], references: [id], onDelete: Cascade)
+  similarity Float
+
+  @@unique([productId])
+  @@index([groupId])
+}
+
+model MatchReview {
+  id         String   @id @default(cuid())
+  productIdA String
+  productIdB String
+  decision   String
+  createdAt  DateTime @default(now())
+
+  @@unique([productIdA, productIdB])
+}
+
+model ScrapeJob {
+  id              String    @id @default(cuid())
+  stores          String
+  categoryFilter  String?
+  maxPages        Int?
+  delayMs         Int
+  status          String
+  productsFound   Int       @default(0)
+  productsNew     Int       @default(0)
+  productsUpdated Int       @default(0)
+  errorCount      Int       @default(0)
+  log             String    @default("")
+  message         String?
+  startedAt       DateTime?
+  finishedAt      DateTime?
+  createdAt       DateTime  @default(now())
+}
+
+model Schedule {
+  id            Int       @id @default(1)
+  enabled       Boolean   @default(false)
+  intervalHours Int       @default(24)
+  stores        String    @default("Cobasi,Petz,Petlove,Alfaderma")
+  delayMs       Int       @default(800)
+  lastRunAt     DateTime?
+  nextRunAt     DateTime?
+}

@@ -1,0 +1,8 @@
+node_modules/
+dist/
+data/
+exports/
+.env
+*.db
+*.db-journal
+probe-*.mjs
