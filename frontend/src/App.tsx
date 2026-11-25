@@ -15,8 +15,7 @@ export function App() {
     <div className="app">
       <aside className="nav">
         <div className="brand">
-          <small>Monitor pet</small>
-          <strong>Preços</strong>
+          <strong>julius-bot</strong>
         </div>
         <nav>
           <NavButton id="overview" current={view}>Visão geral</NavButton>
@@ -258,6 +257,14 @@ function Collection() {
     return () => window.clearInterval(timer);
   }, []);
 
+  function toggleAll(store: string) {
+    const ids = categories[store]?.map((category) => category.id) ?? [];
+    setPicked((current) => {
+      const allSelected = ids.length > 0 && ids.every((id) => current[store]?.includes(id));
+      return { ...current, [store]: allSelected ? [] : ids };
+    });
+  }
+
   async function loadCategories(store: string) {
     setLoadingStore(store);
     setMessage("");
@@ -325,6 +332,11 @@ function Collection() {
             <div className="actions">
               <strong>{store}</strong>
               <button className="ghost" onClick={() => loadCategories(store)}>{loadingStore === store ? "Lendo…" : "Carregar categorias"}</button>
+              {categories[store] && (
+                <button className="ghost" onClick={() => toggleAll(store)}>
+                  {categories[store].every((category) => picked[store]?.includes(category.id)) ? "Limpar seleção" : "Selecionar tudo"}
+                </button>
+              )}
             </div>
             {categories[store] && (
               <div className="category-list">

@@ -1,5 +1,5 @@
 {
-  "name": "pet-price-monitor",
+  "name": "julius-bot",
   "private": true,
   "scripts": {
     "setup": "npm install && npm --prefix backend install && npm --prefix frontend install && npm --prefix backend run prisma:setup",

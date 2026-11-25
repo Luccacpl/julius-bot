@@ -1,4 +1,4 @@
-# Monitor de preços pet
+# julius-bot
 
 Coleta catálogos reais da Cobasi, Petz, Petlove e Alfaderma, guarda o histórico de preços em SQLite e compara produtos equivalentes no dashboard.
 

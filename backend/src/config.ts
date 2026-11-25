@@ -18,5 +18,5 @@ export const config = {
   dataDir: path.join(backendRoot, "data"),
   cacheDir: path.join(backendRoot, "data", "cache"),
   exportsDir: path.join(projectRoot, "exports"),
-  userAgent: "PetPriceMonitor/1.0 (comparador de precos pet; coleta pausada)",
+  userAgent: "JuliusBot/1.0 (comparador de precos pet; coleta pausada)",
 };
